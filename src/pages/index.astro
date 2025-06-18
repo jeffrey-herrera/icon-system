@@ -1,16 +1,27 @@
 ---
+import Layout from '../layouts/Layout.astro';
+import { loadIcons } from '../utils/serverIconLoader';
+import { getCategories } from '../utils/iconLoader';
+import IconLibrary from '../components/IconLibrary';
+import Footer from '../components/Footer';
 
+// Load icons
+const icons = await loadIcons();
+const categories = getCategories(icons);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<script is:inline>
+  if (typeof window !== 'undefined' && window.__REACT_DEVTOOLS_GLOBAL_HOOK__) {
+    window.__REACT_DEVTOOLS_GLOBAL_HOOK__.isDisabled = true; // Attempt to disable completely
+    window.__REACT_DEVTOOLS_GLOBAL_HOOK__.supports = () => false; // Keep this as a fallback
+  }
+</script>
+
+<Layout title="Icon System">
+	<main class="container mx-auto px-4 py-4">
+		<div class="flex flex-col gap-4">
+			<IconLibrary client:load icons={icons} categories={categories} />
+		</div>
+	</main>
+	<Footer client:load />
+</Layout>

@@ -1,0 +1,59 @@
+---
+// No props needed for title anymore
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Braze Icon Library</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="/src/styles/global.css" />
+  </head>
+  <body class="min-h-screen bg-gradient-bg text-slate-900">
+    <div class="container mx-auto px-4">
+      <div class="mt-header-mobile sm:mt-header-sm lg:mt-header-lg">
+        <slot />
+      </div>
+
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --braze-purple: #801ED7;
+    --braze-action: #5710E5;
+    --braze-purple-light: #7C3AED;
+    --braze-purple-lighter: #A855F7;
+    --braze-purple-dark: #300266;
+    --braze-orange: #FFA524;
+    --braze-pink: #FFA4FB;
+  }
+
+  body {
+    font-family: 'AribauGrotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+
+  /* Ensure minimum touch target size */
+  button, 
+  [role="button"],
+  input[type="checkbox"],
+  input[type="radio"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Remove default focus styling and replace with custom */
+  *:focus {
+    outline: none;
+  }
+  
+  /* Custom focus styles for inputs */
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+  }
+</style> 
