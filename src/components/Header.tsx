@@ -45,7 +45,7 @@ const Header: React.FC<HeaderProps> = ({
                     Icon Library
                   </h1>
                 </div>
-                <p className="text-gray-600 max-w-xl lg:max-w-none text-sm sm:text-base lg:text-[16px] px-2 lg:px-0">
+                <p className="text-gray-600 max-w-xl lg:max-w-none text-base sm:text-base lg:text-[16px] px-2 lg:px-0 text-balance">
                   Managing <span className="text-braze-purple">{iconCount} icon{iconCount !== 1 ? 's' : ''}</span> across{' '}
                   <span className="text-braze-purple">{categoryCount} categor{categoryCount === 1 ? 'y' : 'ies'}</span> with{' '}
                   <span className="text-braze-purple">multi-style support</span>
