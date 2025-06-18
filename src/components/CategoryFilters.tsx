@@ -20,7 +20,7 @@ const CategoryFilters: React.FC<CategoryFiltersProps> = ({
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
   return (
-    <div className="pt-2 pb-2">
+    <div className="pt-2 pb-2 mt-8">
       {/* Mobile Filter Toggle Button */}
       <div className="block sm:hidden px-4 mb-4">
         <button
