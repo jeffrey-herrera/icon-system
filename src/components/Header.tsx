@@ -31,7 +31,7 @@ const Header: React.FC<HeaderProps> = ({
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,_rgba(87,16,229,0.03)_0%,_transparent_50%)] pointer-events-none"></div>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_60%,_rgba(168,85,247,0.02)_0%,_transparent_50%)] pointer-events-none"></div>
-      <div className="relative max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+      <div className="relative container mx-auto px-4">
         <div className="pt-3 sm:pt-6 pb-3 sm:pb-4">
           <div className="flex flex-col space-y-4 lg:space-y-0 lg:flex-row lg:items-start lg:justify-between">
             {/* Left: Logo and Title */}

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { ChevronDown, ChevronUp, Filter } from 'lucide-react';
 import type { CategoryData } from '../utils/iconLoader';
 
 interface CategoryFiltersProps {
@@ -16,14 +17,48 @@ const CategoryFilters: React.FC<CategoryFiltersProps> = ({
   totalIcons,
   filteredIconsCount
 }) => {
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+
   return (
     <div className="pt-2 pb-2">
-      {/* Category Pills */}
-      <div className="px-2 mb-6">
+      {/* Mobile Filter Toggle Button */}
+      <div className="block sm:hidden px-4 mb-4">
+        <button
+          onClick={() => setIsMobileFilterOpen(!isMobileFilterOpen)}
+          className={`w-full flex items-center justify-between px-4 py-3 rounded-lg border transition-all duration-200 ${
+            selectedCategories.length > 0
+              ? 'bg-braze-action text-white border-braze-action shadow-lg'
+              : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
+          }`}
+        >
+          <div className="flex items-center gap-2">
+            <Filter className="w-4 h-4" />
+            <span className="font-medium">
+              {selectedCategories.length > 0 
+                ? `${categories.find(c => c.id === selectedCategories[0])?.name || 'Category'} Selected`
+                : 'Filter by Category'
+              }
+            </span>
+          </div>
+          {isMobileFilterOpen ? (
+            <ChevronUp className="w-4 h-4" />
+          ) : (
+            <ChevronDown className="w-4 h-4" />
+          )}
+        </button>
+      </div>
+
+      {/* Category Pills - Always visible on desktop, collapsible on mobile */}
+      <div className={`${
+        isMobileFilterOpen ? 'block' : 'hidden'
+      } sm:block px-2 mb-6`}>
         <div className="flex flex-wrap items-center gap-2">
           {/* All Categories Pill */}
           <button
-            onClick={() => onSelectCategory('')}
+            onClick={() => {
+              onSelectCategory('');
+              setIsMobileFilterOpen(false); // Auto-close on mobile after selection
+            }}
             className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 flex items-center gap-1 sm:gap-2 border ${
               selectedCategories.length === 0
                 ? 'bg-gray-100 text-gray-900 border-gray-200'
@@ -45,6 +80,7 @@ const CategoryFilters: React.FC<CategoryFiltersProps> = ({
                 } else {
                   onSelectCategory(category.id); // Select only this category
                 }
+                setIsMobileFilterOpen(false); // Auto-close on mobile after selection
               }}
               className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 flex items-center gap-1 sm:gap-2 border ${
                 selectedCategories.includes(category.id)
@@ -60,7 +96,10 @@ const CategoryFilters: React.FC<CategoryFiltersProps> = ({
           {/* Clear Filters Pill */}
           {selectedCategories.length > 0 && (
             <button
-              onClick={() => onSelectCategory('')}
+              onClick={() => {
+                onSelectCategory('');
+                setIsMobileFilterOpen(false); // Auto-close on mobile after selection
+              }}
               className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 flex items-center gap-1 sm:gap-2 border bg-red-50 text-red-600 border-red-200 hover:bg-red-100"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
