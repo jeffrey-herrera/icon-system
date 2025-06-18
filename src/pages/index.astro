@@ -5,9 +5,17 @@ import { getCategories } from '../utils/iconLoader';
 import IconLibrary from '../components/IconLibrary';
 import Footer from '../components/Footer';
 
-// Load icons
+// Load icons server-side (will be hydrated client-side)
 const icons = await loadIcons();
 const categories = getCategories(icons);
+
+// For SEO and initial render optimization
+const seoMeta = {
+  title: 'Braze Icon Library - 1,190 Icons Across 21 Categories',
+  description: 'Professional icon library with stroke, solid, and duocolor variants. Export as SVG or PNG with multi-style support.',
+  totalIcons: 1190,
+  totalCategories: 21
+};
 ---
 
 <script is:inline>

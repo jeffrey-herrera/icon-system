@@ -12,6 +12,10 @@ interface HeaderProps {
   categories: CategoryData[];
 }
 
+// Hardcoded values for instant LCP performance
+const TOTAL_ICONS = 1190;
+const TOTAL_CATEGORIES = 21;
+
 // Placeholder for Braze logo SVG
 const BrazeLogo = () => (
   <img src="/images/Braze_Primary_logo_PURPLE.svg" alt="Braze Logo" className="w-full h-full" />
@@ -26,6 +30,10 @@ const Header: React.FC<HeaderProps> = ({
   icons,
   categories,
 }) => {
+  // Use hardcoded values for initial LCP, fallback to dynamic for filtered results
+  const displayIconCount = searchQuery || iconCount < TOTAL_ICONS ? iconCount : TOTAL_ICONS;
+  const displayCategoryCount = searchQuery || categoryCount < TOTAL_CATEGORIES ? categoryCount : TOTAL_CATEGORIES;
+
   return (
     <div className="fixed top-0 left-0 right-0 z-40 py-10 bg-gradient-to-br from-white/95 via-blue-50/60 to-purple-50/40 backdrop-blur-md border-b border-gray-200/50 shadow-sm">
       {/* Background Pattern */}
@@ -46,8 +54,8 @@ const Header: React.FC<HeaderProps> = ({
                   </h1>
                 </div>
                 <p className="text-gray-600 max-w-xl lg:max-w-none text-base sm:text-base lg:text-[16px] px-2 lg:px-0 text-balance">
-                  Managing <span className="text-braze-purple">{iconCount} icon{iconCount !== 1 ? 's' : ''}</span> across{' '}
-                  <span className="text-braze-purple">{categoryCount} categor{categoryCount === 1 ? 'y' : 'ies'}</span> with{' '}
+                  Managing <span className="text-braze-purple">{displayIconCount} icon{displayIconCount !== 1 ? 's' : ''}</span> across{' '}
+                  <span className="text-braze-purple">{displayCategoryCount} categor{displayCategoryCount === 1 ? 'y' : 'ies'}</span> with{' '}
                   <span className="text-braze-purple">multi-style support</span>
                 </p>
               </div>
