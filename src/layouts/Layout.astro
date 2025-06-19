@@ -1,7 +1,6 @@
 ---
 // Import the global CSS file
 import '../styles/global.css';
-import SpeedInsights from '@vercel/speed-insights/astro';
 ---
 
 <!DOCTYPE html>
@@ -20,7 +19,9 @@ import SpeedInsights from '@vercel/speed-insights/astro';
       </div>
 
     </div>
-    <SpeedInsights />
+    
+    <!-- Vercel Speed Insights -->
+    <script defer src="/_vercel/speed-insights/script.js"></script>
   </body>
 </html>
 
