@@ -51,7 +51,7 @@ const CategoryFilters: React.FC<CategoryFiltersProps> = ({
       {/* Category Pills - Always visible on desktop, collapsible on mobile */}
       <div className={`${
         isMobileFilterOpen ? 'block' : 'hidden'
-      } sm:block px-2 mb-6`}>
+      } sm:block mb-6`}>
         <div className="flex flex-wrap items-center gap-2">
           {/* All Categories Pill */}
           <button

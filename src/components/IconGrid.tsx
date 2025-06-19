@@ -105,7 +105,7 @@ const IconGrid: React.FC<IconGridProps> = ({
         return (
           <div key={category} className="space-y-4">
             {/* Category Header */}
-            <div className="px-2" data-category-header={category}>
+            <div data-category-header={category}>
               <div className="flex items-center gap-2">
                 <h2 className="text-lg font-semibold text-gray-900">
                   {getHumanReadableCategoryName(category)}
