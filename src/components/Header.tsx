@@ -13,7 +13,7 @@ interface HeaderProps {
 }
 
 // Hardcoded values for instant LCP performance
-const TOTAL_ICONS = 1190;
+const TOTAL_ICONS = 1204;
 const TOTAL_CATEGORIES = 21;
 
 // Placeholder for Braze logo SVG
