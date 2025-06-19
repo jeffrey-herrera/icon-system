@@ -170,7 +170,7 @@ export default function ExportModal({ icon, open, onClose, onExited }: ExportMod
 
   const getPreviewSVG = () => {
     try {
-      const previewSize = 120;
+      const previewSize = 64;
       const withContainer = style === "container";
       
       if (withContainer) {
@@ -181,7 +181,7 @@ export default function ExportModal({ icon, open, onClose, onExited }: ExportMod
       }
     } catch (error) {
       console.error('Preview generation failed:', error);
-      return `<svg width="120" height="120" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" fill="#f3f4f6" rx="4"/></svg>`;
+      return `<svg width="64" height="64" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" fill="#f3f4f6" rx="4"/></svg>`;
     }
   };
 
@@ -196,7 +196,7 @@ export default function ExportModal({ icon, open, onClose, onExited }: ExportMod
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="w-full max-w-sm sm:max-w-md max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-full max-w-xs sm:max-w-sm max-h-[85vh] overflow-y-auto">
         {/* Close Button - positioned at the very edge of the modal */}
         <button 
           className="absolute top-2 right-2 text-slate-400 hover:text-slate-700 transition-colors z-50 w-6 h-6 flex items-center justify-center" 
@@ -209,8 +209,8 @@ export default function ExportModal({ icon, open, onClose, onExited }: ExportMod
         </button>
 
         {/* Content with responsive padding */}
-        <div className="p-4 sm:p-8">
-          <DialogHeader className="mt-4 mb-6 sm:mb-8">
+        <div className="p-3 sm:p-6">
+          <DialogHeader className="mt-3 mb-4 sm:mb-6">
           <DialogTitle>
             <span className="text-lg sm:text-xl">Export {icon.name}</span>
           </DialogTitle>
@@ -220,19 +220,19 @@ export default function ExportModal({ icon, open, onClose, onExited }: ExportMod
         </DialogHeader>
 
         {/* Preview with responsive sizing */}
-        <div className="w-full rounded-2xl p-6 sm:p-10 mb-4 sm:mb-6" style={{ backgroundColor: '#E6E4F7' }}>
+        <div className="w-full rounded-2xl p-4 sm:p-6 mb-3 sm:mb-4" style={{ backgroundColor: '#E6E4F7' }}>
           <div className="flex justify-center">
             <div 
               dangerouslySetInnerHTML={{ __html: getPreviewSVG() }}
-              className="flex items-center justify-center w-16 h-16 sm:w-[120px] sm:h-[120px]"
+              className="flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16"
             />
           </div>
         </div>
 
-        <div className="space-y-4 sm:space-y-6">
+        <div className="space-y-3 sm:space-y-4">
           {/* Style Selection */}
-          <div className="space-y-3 sm:space-y-4">
-            <label className="block text-sm font-medium text-gray-900 mb-2 sm:mb-4">Style</label>
+          <div className="space-y-2 sm:space-y-3">
+            <label className="block text-sm font-medium text-gray-900 mb-1 sm:mb-2">Style</label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {(Object.keys(styleConfig) as StyleType[]).map((styleType) => {
                 const available = isStyleAvailable(styleType);
@@ -243,7 +243,7 @@ export default function ExportModal({ icon, open, onClose, onExited }: ExportMod
                     key={styleType}
                     onClick={() => available ? setStyle(styleType) : null}
                     disabled={!available}
-                    className={`px-3 py-2 sm:py-3 rounded-2xl text-sm font-medium transition-all duration-200 border-2 flex flex-col items-center justify-center text-center min-h-[3rem] sm:min-h-[4rem] ${
+                    className={`px-2 py-2 sm:py-2 rounded-xl text-sm font-medium transition-all duration-200 border-2 flex flex-col items-center justify-center text-center min-h-[2.5rem] sm:min-h-[3rem] ${
                       style === styleType && available
                         ? "border-braze-action text-gray-900"
                         : available
@@ -266,8 +266,8 @@ export default function ExportModal({ icon, open, onClose, onExited }: ExportMod
 
           {/* Container Color Selection */}
           {style === "container" && (
-            <div className="space-y-3 sm:space-y-4">
-              <label className="block text-sm font-medium text-gray-900 mb-2 sm:mb-4">Container Color</label>
+            <div className="space-y-2 sm:space-y-3">
+              <label className="block text-sm font-medium text-gray-900 mb-1 sm:mb-2">Container Color</label>
               <div className="flex gap-2 sm:gap-3 flex-wrap">
                 {Object.entries(CONTAINER_COLORS).map(([key, color]) => (
                   <button
@@ -303,8 +303,8 @@ export default function ExportModal({ icon, open, onClose, onExited }: ExportMod
 
           {/* Icon Color Selection */}
           {showColorPicker && (
-            <div className="space-y-3 sm:space-y-4">
-              <label className="block text-sm font-medium text-gray-900 mb-2 sm:mb-4">Icon Color</label>
+            <div className="space-y-2 sm:space-y-3">
+              <label className="block text-sm font-medium text-gray-900 mb-1 sm:mb-2">Icon Color</label>
               <div className="flex gap-2 sm:gap-3 flex-wrap">
                 {Object.entries(COLORS).map(([key, color]) => (
                   <button
@@ -324,12 +324,12 @@ export default function ExportModal({ icon, open, onClose, onExited }: ExportMod
           )}
 
           {/* Format Selection */}
-          <div className="space-y-3 sm:space-y-4">
-            <label className="block text-sm font-medium text-gray-900 mb-2 sm:mb-4">Format</label>
+          <div className="space-y-2 sm:space-y-3">
+            <label className="block text-sm font-medium text-gray-900 mb-1 sm:mb-2">Format</label>
             <div className="flex gap-2">
               <button
                 onClick={() => setFormat("svg")}
-                className={`flex-1 px-4 py-2 sm:py-3 rounded-2xl text-sm font-medium transition-all duration-200 border-2 ${
+                className={`flex-1 px-3 py-2 sm:py-2 rounded-xl text-sm font-medium transition-all duration-200 border-2 ${
                   format === "svg"
                     ? "border-braze-action text-gray-900"
                     : "border-[#E5E7EB] text-gray-600 hover:bg-gray-50"
@@ -342,7 +342,7 @@ export default function ExportModal({ icon, open, onClose, onExited }: ExportMod
               </button>
               <button
                 onClick={() => setFormat("png")}
-                className={`flex-1 px-4 py-2 sm:py-3 rounded-2xl text-sm font-medium transition-all duration-200 border-2 ${
+                className={`flex-1 px-3 py-2 sm:py-2 rounded-xl text-sm font-medium transition-all duration-200 border-2 ${
                   format === "png"
                     ? "border-braze-action text-gray-900"
                     : "border-[#E5E7EB] text-gray-600 hover:bg-gray-50"
@@ -362,19 +362,19 @@ export default function ExportModal({ icon, open, onClose, onExited }: ExportMod
           </div>
 
           {/* Export Button */}
-          <div className="relative mt-6 sm:mt-8">
+          <div className="relative mt-4 sm:mt-6">
             <button
               onClick={handleExport}
               disabled={isExporting}
-              className={`w-full bg-gradient-to-r from-[#5710E5] via-[#7C3AED] to-[#A855F7] hover:from-[#4A0DCC] hover:via-[#6B21A8] hover:to-[#9333EA] text-white font-bold text-base sm:text-lg py-4 sm:py-6 px-6 sm:px-8 rounded-full shadow-2xl hover:shadow-[0_20px_40px_-8px_rgba(87,16,229,0.6)] transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 sm:gap-4 relative overflow-hidden ${
+              className={`w-full bg-gradient-to-r from-[#5710E5] via-[#7C3AED] to-[#A855F7] hover:from-[#4A0DCC] hover:via-[#6B21A8] hover:to-[#9333EA] text-white font-bold text-sm sm:text-base py-3 sm:py-4 px-4 sm:px-6 rounded-full shadow-2xl hover:shadow-[0_20px_40px_-8px_rgba(87,16,229,0.6)] transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 sm:gap-3 relative overflow-hidden ${
                 isExporting ? 'opacity-75 cursor-not-allowed' : ''
               }`}
             >
               <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-white/10 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-full"></div>
               
-              <div className="relative z-10 flex items-center gap-3 sm:gap-4">
-                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                  <Download className="w-4 h-4 sm:w-5 sm:h-5" />
+              <div className="relative z-10 flex items-center gap-2 sm:gap-3">
+                <div className="w-5 h-5 sm:w-6 sm:h-6 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                  <Download className="w-3 h-3 sm:w-4 sm:h-4" />
                 </div>
                 <span className="tracking-wide">
                   {isExporting ? `Exporting ${format.toUpperCase()}...` : `Export ${format.toUpperCase()}`}
