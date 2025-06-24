@@ -112,7 +112,7 @@ const CategoryFilters: React.FC<CategoryFiltersProps> = ({
       </div>
 
       {/* Results Summary */}
-      <div className="px-4 mb-6">
+      <div className="mb-6">
         <p className="text-xs text-gray-500">
           Showing {filteredIconsCount} of {totalIcons} icons
         </p>
