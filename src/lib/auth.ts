@@ -30,6 +30,7 @@ const getDatabase = () => {
 }
 
 export const auth = betterAuth({
+  baseURL: getEnvVar("BETTER_AUTH_URL", "http://localhost:4321"),
   database: getDatabase(),
   secret: getEnvVar("BETTER_AUTH_SECRET", "fallback-secret-key-for-development-only"),
   
