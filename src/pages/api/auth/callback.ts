@@ -8,13 +8,19 @@ export const GET: APIRoute = async ({ request, redirect }) => {
     const url = new URL(request.url)
     const code = url.searchParams.get('code')
     const error = url.searchParams.get('error')
+    const state = url.searchParams.get('state')
 
-    console.log('OAuth callback called:', { code: !!code, error })
+    console.log('=== OAuth Callback Debug ===')
+    console.log('Full URL:', request.url)
+    console.log('Code present:', !!code)
+    console.log('Error:', error)
+    console.log('State:', state)
+    console.log('All params:', Object.fromEntries(url.searchParams.entries()))
 
     // Handle OAuth error
     if (error) {
-      console.log('OAuth error:', error)
-      return redirect('/login?error=oauth_error')
+      console.log('OAuth error detected:', error)
+      return redirect('/login?error=oauth_error&details=' + encodeURIComponent(error))
     }
 
     // Handle missing code
@@ -24,35 +30,49 @@ export const GET: APIRoute = async ({ request, redirect }) => {
     }
 
     // Exchange code for tokens
-    console.log('Exchanging code for tokens...')
-    const tokens = await simpleAuth.exchangeCodeForTokens(code)
-    
-    // Get user info
-    console.log('Getting user info...')
-    const user = await simpleAuth.getGoogleUser(tokens.access_token)
-    
-    // Validate Braze email
-    if (!simpleAuth.validateBrazeEmail(user.email)) {
-      console.log('Non-Braze email rejected:', user.email)
-      return redirect('/login?error=invalid_domain')
+    console.log('Attempting to exchange code for tokens...')
+    try {
+      const tokens = await simpleAuth.exchangeCodeForTokens(code)
+      console.log('Token exchange successful, access_token present:', !!tokens.access_token)
+      
+      // Get user info
+      console.log('Attempting to get user info...')
+      const user = await simpleAuth.getGoogleUser(tokens.access_token)
+      console.log('User info received:', { email: user.email, name: user.name })
+      
+      // Validate Braze email
+      const isValidEmail = simpleAuth.validateBrazeEmail(user.email)
+      console.log('Email validation result:', isValidEmail, 'for email:', user.email)
+      
+      if (!isValidEmail) {
+        console.log('Non-Braze email rejected:', user.email)
+        return redirect('/login?error=invalid_domain&email=' + encodeURIComponent(user.email))
+      }
+
+      // Create session token
+      const sessionToken = simpleAuth.createSessionToken(user)
+      console.log('Session token created, length:', sessionToken.length)
+      
+      console.log('=== Login Successful ===')
+      console.log('User:', user.email)
+      console.log('Redirecting to home page...')
+
+      // Set session cookie and redirect to home
+      return new Response(null, {
+        status: 302,
+        headers: {
+          'Location': '/?login=success',
+          'Set-Cookie': `session=${sessionToken}; HttpOnly; Secure; SameSite=Lax; Max-Age=${7 * 24 * 60 * 60}; Path=/`
+        }
+      })
+
+    } catch (tokenError) {
+      console.error('Token exchange or user info error:', tokenError)
+      return redirect('/login?error=token_exchange_failed&details=' + encodeURIComponent(tokenError instanceof Error ? tokenError.message : 'Unknown token error'))
     }
 
-    // Create session token
-    const sessionToken = simpleAuth.createSessionToken(user)
-    
-    console.log('Login successful for:', user.email)
-
-    // Set session cookie and redirect to home
-    return new Response(null, {
-      status: 302,
-      headers: {
-        'Location': '/',
-        'Set-Cookie': `session=${sessionToken}; HttpOnly; Secure; SameSite=Lax; Max-Age=${7 * 24 * 60 * 60}; Path=/`
-      }
-    })
-
   } catch (error) {
-    console.error('OAuth callback error:', error)
-    return redirect('/login?error=callback_failed')
+    console.error('=== OAuth Callback Fatal Error ===', error)
+    return redirect('/login?error=callback_failed&details=' + encodeURIComponent(error instanceof Error ? error.message : 'Unknown callback error'))
   }
 } 

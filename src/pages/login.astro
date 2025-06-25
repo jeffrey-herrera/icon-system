@@ -4,16 +4,22 @@ export const prerender = false;
 // Check for error messages
 const url = Astro.url;
 const error = url.searchParams.get('error');
+const details = url.searchParams.get('details');
+const email = url.searchParams.get('email');
 
 let errorMessage = '';
 if (error === 'oauth_error') {
-  errorMessage = 'OAuth authentication failed. Please try again.';
+  errorMessage = `OAuth authentication failed: ${details || 'Unknown error'}`;
 } else if (error === 'no_code') {
-  errorMessage = 'No authorization code received. Please try again.';
+  errorMessage = 'No authorization code received from Google. Please try again.';
 } else if (error === 'invalid_domain') {
-  errorMessage = 'Only @braze.com email addresses are allowed.';
+  errorMessage = `Only @braze.com email addresses are allowed. You tried: ${email || 'unknown email'}`;
 } else if (error === 'callback_failed') {
-  errorMessage = 'Authentication callback failed. Please try again.';
+  errorMessage = `Authentication callback failed: ${details || 'Unknown error'}`;
+} else if (error === 'token_exchange_failed') {
+  errorMessage = `Token exchange failed: ${details || 'Unknown error'}`;
+} else if (error) {
+  errorMessage = `Authentication error: ${error} - ${details || 'No additional details'}`;
 }
 ---
 
