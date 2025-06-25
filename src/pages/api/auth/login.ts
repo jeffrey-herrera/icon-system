@@ -3,7 +3,7 @@ import { simpleAuth } from "../../../lib/simple-auth"
 
 export const prerender = false
 
-// Force redeploy - 2025-06-25 02:15
+// LATEST: Complete OAuth rewrite deployed - 2025-06-25 02:20
 export const GET: APIRoute = async () => {
   try {
     console.log('Login initiation requested')
