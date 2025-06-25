@@ -27,17 +27,25 @@ import '../styles/global.css';
     <script>
       // Handle logout functionality
       document.addEventListener('DOMContentLoaded', () => {
-        const logoutBtn = document.getElementById('logout-btn');
-        if (logoutBtn) {
-          logoutBtn.addEventListener('click', async () => {
-            try {
-              // Clear session cookie and redirect to login
-              document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-              window.location.href = '/login';
-            } catch (error) {
-              console.error('Logout failed:', error);
-            }
-          });
+        // Handle both mobile and desktop logout buttons
+        const logoutBtnMobile = document.getElementById('logout-btn');
+        const logoutBtnDesktop = document.getElementById('logout-btn-desktop');
+        
+        const handleLogout = async () => {
+          try {
+            // Clear session cookie and redirect to login
+            document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            window.location.href = '/login';
+          } catch (error) {
+            console.error('Logout failed:', error);
+          }
+        };
+
+        if (logoutBtnMobile) {
+          logoutBtnMobile.addEventListener('click', handleLogout);
+        }
+        if (logoutBtnDesktop) {
+          logoutBtnDesktop.addEventListener('click', handleLogout);
         }
       });
     </script>
