@@ -26,12 +26,15 @@ export const GET: APIRoute = async () => {
       success: true,
       message: "Better Auth loaded successfully",
       timestamp: new Date().toISOString(),
+      deploymentTime: "2025-06-25T01:50:00Z", // Force fresh deployment
       environment: process.env.NODE_ENV,
       hasGoogleClientId: !!process.env.GOOGLE_CLIENT_ID,
       hasGoogleClientSecret: !!process.env.GOOGLE_CLIENT_SECRET,
       hasBetterAuthSecret: !!process.env.BETTER_AUTH_SECRET,
       authTest: sessionTest,
       betterAuthUrl: process.env.BETTER_AUTH_URL,
+      publicBetterAuthUrl: process.env.PUBLIC_BETTER_AUTH_URL,
+      allPublicEnvVars: Object.keys(process.env).filter(key => key.startsWith('PUBLIC_')),
     }), {
       status: 200,
       headers: { 
