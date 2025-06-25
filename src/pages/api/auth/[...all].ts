@@ -6,14 +6,31 @@ export const prerender = false
 export const ALL: APIRoute = async (ctx) => {
   try {
     console.log('Auth handler called:', ctx.request.method, ctx.request.url)
-    const result = await auth.handler(ctx.request)
+    
+    // Create a new request with the full URL for Better Auth
+    const url = new URL(ctx.request.url)
+    const request = new Request(url, {
+      method: ctx.request.method,
+      headers: ctx.request.headers,
+      body: ctx.request.body,
+    })
+    
+    const result = await auth.handler(request)
     console.log('Auth handler result:', result.status)
     return result
   } catch (error) {
     console.error('Auth handler error:', error)
-    return new Response(JSON.stringify({ error: 'Auth handler failed' }), {
+    return new Response(JSON.stringify({ 
+      error: 'Auth handler failed',
+      message: error instanceof Error ? error.message : 'Unknown error',
+      url: ctx.request.url,
+      method: ctx.request.method
+    }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      }
     })
   }
 }
