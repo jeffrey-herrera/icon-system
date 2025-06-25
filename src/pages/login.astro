@@ -1,9 +1,19 @@
 ---
 export const prerender = false;
 
-// Redirect if already authenticated
-if (Astro.locals.user) {
-  return Astro.redirect('/')
+// Check for error messages
+const url = Astro.url;
+const error = url.searchParams.get('error');
+
+let errorMessage = '';
+if (error === 'oauth_error') {
+  errorMessage = 'OAuth authentication failed. Please try again.';
+} else if (error === 'no_code') {
+  errorMessage = 'No authorization code received. Please try again.';
+} else if (error === 'invalid_domain') {
+  errorMessage = 'Only @braze.com email addresses are allowed.';
+} else if (error === 'callback_failed') {
+  errorMessage = 'Authentication callback failed. Please try again.';
 }
 ---
 
@@ -39,10 +49,17 @@ if (Astro.locals.user) {
           </p>
         </div>
         
+        {/* Error Message */}
+        {errorMessage && (
+          <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700 text-sm">
+            {errorMessage}
+          </div>
+        )}
+        
         {/* Sign In Button */}
         <div class="space-y-4">
-          <button
-            id="google-signin"
+          <a
+            href="/api/auth/login"
             class="group relative w-full flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 text-sm font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-braze-action/10 focus:border-braze-action/50 transition-all duration-200 shadow-sm hover:shadow-md"
           >
             {/* Google Icon */}
@@ -53,7 +70,7 @@ if (Astro.locals.user) {
               <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
             </svg>
             Continue with Google
-          </button>
+          </a>
           
           {/* Security Note */}
           <div class="text-center">
@@ -68,48 +85,5 @@ if (Astro.locals.user) {
       {/* Subtle glow effect */}
       <div class="absolute inset-0 bg-gradient-to-r from-braze-purple/5 via-transparent to-braze-action/5 rounded-2xl blur-xl -z-10 scale-105"></div>
     </div>
-
-    <script>
-      document.addEventListener('DOMContentLoaded', async () => {
-        console.log('Login page loaded')
-        console.log('Current URL:', window.location.href)
-        console.log('PUBLIC_BETTER_AUTH_URL:', import.meta.env.PUBLIC_BETTER_AUTH_URL)
-        
-        try {
-          const { authClient } = await import('../lib/auth-client')
-          console.log('Auth client loaded successfully')
-          
-          const button = document.getElementById('google-signin')
-          if (!button) {
-            console.error('Google signin button not found')
-            return
-          }
-          
-          console.log('Button found, adding click listener')
-          
-          button.addEventListener('click', async (e) => {
-            e.preventDefault()
-            console.log('Google signin button clicked')
-            
-            try {
-              console.log('Starting Google OAuth...')
-              const result = await authClient.signIn.social({
-                provider: "google",
-                callbackURL: "/",
-              })
-              console.log('OAuth result:', result)
-            } catch (error) {
-              console.error('OAuth error:', error)
-              const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-              alert('Login failed: ' + errorMessage)
-            }
-          })
-        } catch (error) {
-          console.error('Failed to load auth client:', error)
-          const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-          alert('Failed to initialize authentication. Check console for details: ' + errorMessage)
-        }
-      })
-    </script>
   </body>
 </html> 
