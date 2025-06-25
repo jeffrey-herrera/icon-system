@@ -1,11 +1,9 @@
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
 import type { IconData, IconStyle } from './iconLoader';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-const ICONS_DIR = path.join(__dirname, '../../public/icons');
+// Use process.cwd() for Vercel serverless compatibility
+const ICONS_DIR = path.join(process.cwd(), 'public/icons');
 
 // Comprehensive icon tagging system
 function generateIconTags(baseName: string, category: string, style: string): string[] {
