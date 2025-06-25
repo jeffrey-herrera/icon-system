@@ -7,15 +7,9 @@ export const ALL: APIRoute = async (ctx) => {
   try {
     console.log('Auth handler called:', ctx.request.method, ctx.request.url)
     
-    // Create a new request with the full URL for Better Auth
-    const url = new URL(ctx.request.url)
-    const request = new Request(url, {
-      method: ctx.request.method,
-      headers: ctx.request.headers,
-      body: ctx.request.body,
-    })
-    
-    const result = await auth.handler(request)
+    // Pass the original request directly to Better Auth
+    // Don't try to clone it as that causes duplex issues
+    const result = await auth.handler(ctx.request)
     console.log('Auth handler result:', result.status)
     return result
   } catch (error) {
