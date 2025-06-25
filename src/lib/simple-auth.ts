@@ -24,8 +24,7 @@ export class SimpleAuth {
       redirect_uri: this.redirectUri,
       response_type: 'code',
       scope: 'openid email profile',
-      access_type: 'offline',
-      prompt: 'consent'
+      access_type: 'offline'
     })
 
     return `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`
