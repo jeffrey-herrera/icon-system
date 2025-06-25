@@ -1,5 +1,4 @@
 {
-  "framework": "astro",
   "headers": [
     {
       "source": "/icons/(.*)",
