@@ -11,8 +11,8 @@ Add these environment variables to your Vercel project:
 ### 2. Add the following variables for **Preview** and **Production** environments:
 
 ```
-BETTER_AUTH_SECRET=your-32-character-secret-key-here
-BETTER_AUTH_URL=https://your-preview-url.vercel.app
+AUTH_SECRET=your-32-character-secret-key-here
+AUTH_BASE_URL=https://your-preview-url.vercel.app
 GOOGLE_CLIENT_ID=your-google-oauth-client-id
 GOOGLE_CLIENT_SECRET=your-google-oauth-client-secret
 ```
@@ -28,7 +28,7 @@ GOOGLE_CLIENT_SECRET=your-google-oauth-client-secret
    https://your-production-url.vercel.app/api/auth/callback/google
    ```
 
-### 4. Generate BETTER_AUTH_SECRET
+### 4. Generate AUTH_SECRET
 
 Run this command to generate a secure secret:
 ```bash

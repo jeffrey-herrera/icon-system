@@ -31,8 +31,8 @@ import '../styles/global.css';
         if (logoutBtn) {
           logoutBtn.addEventListener('click', async () => {
             try {
-                             const { authClient } = await import('../lib/auth-client');
-              await authClient.signOut();
+              // Clear session cookie and redirect to login
+              document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
               window.location.href = '/login';
             } catch (error) {
               console.error('Logout failed:', error);

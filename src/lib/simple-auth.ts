@@ -14,7 +14,7 @@ export class SimpleAuth {
   constructor() {
     this.clientId = process.env.GOOGLE_CLIENT_ID || ''
     this.clientSecret = process.env.GOOGLE_CLIENT_SECRET || ''
-    this.redirectUri = `${process.env.BETTER_AUTH_URL || 'http://localhost:4321'}/api/auth/callback`
+    this.redirectUri = `${process.env.AUTH_BASE_URL || process.env.BETTER_AUTH_URL || 'http://localhost:4321'}/api/auth/callback`
   }
 
   // Generate Google OAuth URL

@@ -2,7 +2,7 @@ import { defineMiddleware } from "astro:middleware"
 import { simpleAuth } from "./lib/simple-auth"
 
 // Routes that don't require authentication
-const PUBLIC_ROUTES = ["/login", "/api/", "/test-auth"]
+const PUBLIC_ROUTES = ["/login", "/api/"]
 
 export const onRequest = defineMiddleware(async (context, next) => {
   // Skip auth check for public routes
