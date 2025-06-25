@@ -23,4 +23,5 @@ export const GET: APIRoute = ALL
 export const POST: APIRoute = ALL
 export const PUT: APIRoute = ALL
 export const DELETE: APIRoute = ALL
-export const PATCH: APIRoute = ALL 
+export const PATCH: APIRoute = ALL
+export const OPTIONS: APIRoute = ALL 

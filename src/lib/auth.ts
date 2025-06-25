@@ -1,24 +1,22 @@
 import { betterAuth } from "better-auth"
 import Database from "better-sqlite3"
 
-// Create database with proper error handling for serverless environments
-function createDatabase() {
+// Handle database in serverless environment
+const getDatabase = () => {
   try {
-    // Try to create/open the database file
-    const db = new Database("auth.db")
-    
-    // Enable WAL mode for better concurrency (if supported)
-    try {
-      db.exec("PRAGMA journal_mode = WAL;")
-    } catch (e) {
-      console.warn("WAL mode not supported, using default journal mode")
+    if (typeof process !== 'undefined' && process.env.NODE_ENV === 'production') {
+      // In production (Vercel), create an in-memory database
+      console.log('Creating in-memory database for serverless environment')
+      return new Database(':memory:')
+    } else {
+      // In development, use file-based database
+      console.log('Using file-based database for development')
+      return new Database("./auth.db")
     }
-    
-    return db
   } catch (error) {
-    console.warn("Failed to create file-based database, falling back to in-memory:", error)
-    // Fallback to in-memory database for serverless environments
-    return new Database(":memory:")
+    console.error('Database creation error:', error)
+    // Fallback to in-memory database
+    return new Database(':memory:')
   }
 }
 
@@ -31,7 +29,7 @@ export const auth = betterAuth({
   baseURL: getEnvVar("BETTER_AUTH_URL", "http://localhost:4321"),
   secret: getEnvVar("BETTER_AUTH_SECRET", "fallback-secret-key-for-development-only"),
   
-  database: createDatabase(),
+  database: getDatabase(),
   
   emailAndPassword: {
     enabled: false,
@@ -39,8 +37,8 @@ export const auth = betterAuth({
   
   socialProviders: {
     google: {
-      clientId: getEnvVar("GOOGLE_CLIENT_ID"),
-      clientSecret: getEnvVar("GOOGLE_CLIENT_SECRET"),
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       redirectURI: `${getEnvVar("BETTER_AUTH_URL", "http://localhost:4321")}/api/auth/callback/google`,
       // Add additional configuration for better error handling
       scope: ["openid", "email", "profile"],
@@ -51,7 +49,7 @@ export const auth = betterAuth({
     additionalFields: {
       emailVerified: {
         type: "boolean",
-        required: false,
+        defaultValue: false
       },
     },
   },
@@ -61,14 +59,30 @@ export const auth = betterAuth({
     updateAge: 60 * 60 * 24, // 1 day
   },
   
+  advanced: {
+    generateId: () => crypto.randomUUID(),
+    crossSubDomainCookies: {
+      enabled: true,
+    },
+    useSecureCookies: process.env.NODE_ENV === 'production',
+  },
+  
+  // Add CORS configuration
+  cors: {
+    origin: true, // Allow all origins in development, you can restrict this in production
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
+  },
+  
   callbacks: {
     async signIn({ user, account }: { user: any; account: any }) {
-      console.log("Sign in attempt:", { user: user.email, provider: account?.providerId })
+      console.log("Sign in attempt:", { user: user.email, provider: account?.provider })
       
-      // Check if email is from @braze.com domain
-      if (!user.email?.endsWith("@braze.com")) {
-        console.log("Sign in rejected: email not from @braze.com domain")
-        throw new Error("Only @braze.com email addresses are allowed")
+      // Only allow @braze.com emails
+      if (!user.email?.endsWith('@braze.com')) {
+        console.log('Rejected non-Braze email:', user.email)
+        throw new Error('Only @braze.com email addresses are allowed')
       }
       
       console.log("Sign in approved for:", user.email)
