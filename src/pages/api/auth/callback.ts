@@ -9,13 +9,38 @@ export const GET: APIRoute = async ({ request, redirect }) => {
     const code = url.searchParams.get('code')
     const error = url.searchParams.get('error')
     const state = url.searchParams.get('state')
+    const testMode = url.searchParams.get('test')
 
     console.log('=== OAuth Callback Debug ===')
     console.log('Full URL:', request.url)
     console.log('Code present:', !!code)
     console.log('Error:', error)
     console.log('State:', state)
+    console.log('Test mode:', testMode)
     console.log('All params:', Object.fromEntries(url.searchParams.entries()))
+
+    // TEST MODE: Skip Google OAuth and create test session
+    if (testMode === 'braze') {
+      console.log('=== TEST MODE: Creating test Braze session ===')
+      const testUser = {
+        id: 'test-123',
+        email: 'test@braze.com',
+        name: 'Test User',
+        picture: 'https://via.placeholder.com/150'
+      }
+      
+      const sessionToken = simpleAuth.createSessionToken(testUser)
+      console.log('Test session token created, length:', sessionToken.length)
+      console.log('Redirecting to home page with test session...')
+
+      return new Response(null, {
+        status: 302,
+        headers: {
+          'Location': '/?login=test_success',
+          'Set-Cookie': `session=${sessionToken}; HttpOnly; Secure; SameSite=Lax; Max-Age=${7 * 24 * 60 * 60}; Path=/`
+        }
+      })
+    }
 
     // Handle OAuth error
     if (error) {
