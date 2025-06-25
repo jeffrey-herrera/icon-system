@@ -72,6 +72,8 @@ if (Astro.locals.user) {
     <script>
       document.addEventListener('DOMContentLoaded', async () => {
         console.log('Login page loaded')
+        console.log('Current URL:', window.location.href)
+        console.log('PUBLIC_BETTER_AUTH_URL:', import.meta.env.PUBLIC_BETTER_AUTH_URL)
         
         try {
           const { authClient } = await import('../lib/auth-client')
@@ -83,25 +85,29 @@ if (Astro.locals.user) {
             return
           }
           
+          console.log('Button found, adding click listener')
+          
           button.addEventListener('click', async (e) => {
             e.preventDefault()
             console.log('Google signin button clicked')
             
-                         try {
-               console.log('Starting Google OAuth...')
-               await authClient.signIn.social({
-                 provider: "google",
-                 callbackURL: "/",
-               })
-               console.log('OAuth initiated successfully')
+            try {
+              console.log('Starting Google OAuth...')
+              const result = await authClient.signIn.social({
+                provider: "google",
+                callbackURL: "/",
+              })
+              console.log('OAuth result:', result)
             } catch (error) {
               console.error('OAuth error:', error)
-              alert('Login failed: ' + error.message)
+              const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+              alert('Login failed: ' + errorMessage)
             }
           })
         } catch (error) {
           console.error('Failed to load auth client:', error)
-          alert('Failed to initialize authentication. Check console for details.')
+          const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+          alert('Failed to initialize authentication. Check console for details: ' + errorMessage)
         }
       })
     </script>
