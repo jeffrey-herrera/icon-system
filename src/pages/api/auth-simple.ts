@@ -7,6 +7,21 @@ export const GET: APIRoute = async () => {
     // Test basic Better Auth import
     const { auth } = await import("../../lib/auth")
     
+    // Test if we can make a simple auth request
+    let sessionTest = "Not tested"
+    try {
+      // Create a test request to the session endpoint
+      const testRequest = new Request("https://example.com/api/auth/session", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" }
+      })
+      
+      const sessionResponse = await auth.handler(testRequest)
+      sessionTest = `Session test: ${sessionResponse.status}`
+    } catch (sessionError) {
+      sessionTest = `Session error: ${sessionError instanceof Error ? sessionError.message : 'Unknown'}`
+    }
+    
     return new Response(JSON.stringify({
       success: true,
       message: "Better Auth loaded successfully",
@@ -15,6 +30,8 @@ export const GET: APIRoute = async () => {
       hasGoogleClientId: !!process.env.GOOGLE_CLIENT_ID,
       hasGoogleClientSecret: !!process.env.GOOGLE_CLIENT_SECRET,
       hasBetterAuthSecret: !!process.env.BETTER_AUTH_SECRET,
+      authTest: sessionTest,
+      betterAuthUrl: process.env.BETTER_AUTH_URL,
     }), {
       status: 200,
       headers: { 
